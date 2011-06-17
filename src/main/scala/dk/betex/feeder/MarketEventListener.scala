@@ -9,7 +9,7 @@ import dk.betex.api._
  *
  * @author korzekwad
  */
-case class MarketEventListener(betexAdaptor:IBetex) extends EventListener {
+case class MarketEventListener(betexAdaptor: IBetex) extends EventListener {
 
   val userId = Integer.MAX_VALUE / 3
   val marketEventProcessor = new MarketEventProcessorImpl(betexAdaptor)
@@ -23,6 +23,9 @@ case class MarketEventListener(betexAdaptor:IBetex) extends EventListener {
       lastBetId
     }
 
-    events.foreach(e => marketEventProcessor.process(e, nextBetId, userId))
+    for (event <- events) {
+      marketEventProcessor.process(event, nextBetId, userId)
+    }
+
   }
 }

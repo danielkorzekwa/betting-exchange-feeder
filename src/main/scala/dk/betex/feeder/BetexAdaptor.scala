@@ -24,13 +24,15 @@ case class BetexAdaptor(betexUrl: String) extends IBetex {
    */
   def createMarket(marketId: Long, marketName: String, eventName: String, numOfWinners: Int, marketTime: Date, runners: List[IMarket.IRunner]): IMarket = {
 
+    val runnersString = runners.foldLeft("")((s,runner) => s + runner.runnerId + ":" + runner.runnerName  + ",").dropRight(1)
+    
     val responseMsg = resource.path("/createMarket").
       queryParam("marketId", marketId.toString).
       queryParam("marketName", marketName).
       queryParam("eventName", eventName).
       queryParam("numOfWinners", numOfWinners.toString).
       queryParam("marketTime", marketTime.getTime().toString()).
-      queryParam("runners", "11:Man Utd,12:Arsenal").
+      queryParam("runners", runnersString).
       get(classOf[String])
 
     require(responseMsg.equals("OK"), responseMsg)

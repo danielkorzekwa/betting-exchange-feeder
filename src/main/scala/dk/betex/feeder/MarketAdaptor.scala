@@ -8,11 +8,12 @@ import IBet.BetTypeEnum._
 import IBet.BetStatusEnum._
 import com.sun.jersey.api.client._
 
-/**Adaptor to remote betting exchange market.
- * 
+/**
+ * Adaptor to remote betting exchange market.
+ *
  * @author korzekwad
  */
-case class MarketAdaptor(val marketId:Long, resource: WebResource) extends IMarket{
+case class MarketAdaptor(val marketId: Long, resource: WebResource) extends IMarket {
 
   lazy val marketName: String = throw new UnsupportedOperationException("Not implemented yet.")
   lazy val eventName: String = throw new UnsupportedOperationException("Not implemented yet.")
@@ -32,7 +33,21 @@ case class MarketAdaptor(val marketId:Long, resource: WebResource) extends IMark
    *
    * @return The bet that was placed.
    */
-  def placeBet(betId: Long, userId: Long, betSize: Double, betPrice: Double, betType: BetTypeEnum, runnerId: Long, placedDate: Long): IBet = throw new UnsupportedOperationException("Not implemented yet.")
+  def placeBet(betId: Long, userId: Long, betSize: Double, betPrice: Double, betType: BetTypeEnum, runnerId: Long, placedDate: Long): IBet = {
+
+    val responseMsg = resource.path("/placeBet").
+      queryParam("betId", betId.toString).
+      queryParam("userId", userId.toString).
+      queryParam("betSize", betSize.toString).
+      queryParam("betPrice", betPrice.toString).
+      queryParam("betType", betType.toString).
+      queryParam("marketId", marketId.toString).
+      queryParam("runnerId", runnerId.toString).
+      queryParam("placedDate", placedDate.toString).get(classOf[String])
+
+    require(responseMsg.equals("OK"), responseMsg)
+    null
+  }
 
   /**
    * Cancels a bet on a betting exchange market.
@@ -54,8 +69,18 @@ case class MarketAdaptor(val marketId:Long, resource: WebResource) extends IMark
    *
    * @return Amount cancelled. Zero is returned if nothing is available to cancel.
    */
-  def cancelBets(userId: Long, betsSize: Double, betPrice: Double, betType: BetTypeEnum, runnerId: Long): Double = throw new UnsupportedOperationException("Not implemented yet.")
+  def cancelBets(userId: Long, betsSize: Double, betPrice: Double, betType: BetTypeEnum, runnerId: Long): Double = {
+    val cancelBetsMsg = resource.path("/cancelBets").
+      queryParam("userId", userId.toString).
+      queryParam("betSize", betsSize.toString).
+      queryParam("betPrice", betPrice.toString).
+      queryParam("betType", betType.toString).
+      queryParam("marketId", marketId.toString).
+      queryParam("runnerId", runnerId.toString).get(classOf[String])
 
+    require(cancelBetsMsg.equals("OK"), cancelBetsMsg)
+    -1
+  }
   /**
    * Returns total unmatched volume to back and to lay at all prices for all runners in a market on a betting exchange.
    *  Prices with zero volume are not returned by this method.
@@ -129,11 +154,11 @@ case class MarketAdaptor(val marketId:Long, resource: WebResource) extends IMark
    */
   def addUnmatchedBetsListener(filter: (IBet) => Boolean, listener: (IBet) => Unit) = throw new UnsupportedOperationException("Not implemented yet.")
 
-   /**
+  /**
    * Register listener on cancelled bets.
    *
    * @param listener
    */
   def addCancelledBetsListener(listener: (IBet) => Unit) = throw new UnsupportedOperationException("Not implemented yet.")
-  
+
 }

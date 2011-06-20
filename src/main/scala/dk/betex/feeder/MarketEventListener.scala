@@ -3,29 +3,33 @@ package dk.betex.feeder
 import dk.bettingai.marketcollector.task.EventCollectorTask.EventListener
 import dk.bettingai.marketsimulator.marketevent._
 import dk.betex.api._
+import com.sun.jersey.api.client._
+import org.codehaus.jettison.json._
 
 /**
  * Feeds markets events to a betting exchange.
  *
  * @author korzekwad
  */
-case class MarketEventListener(betexAdaptor: IBetex) extends EventListener {
+case class MarketEventListener(betexUrl: String) extends EventListener {
 
   val userId = Integer.MAX_VALUE / 3
-  val marketEventProcessor = new MarketEventProcessorImpl(betexAdaptor)
 
-  var lastBetId = 1
+  /**Client and resource are thread safe objects.*/
+  private val client = Client.create()
+  private val resource = client.resource(betexUrl)
 
   def onEvents(marketId: Long, events: List[String]): Unit = {
 
-    def nextBetId(): Int = {
-      lastBetId += 1
-      lastBetId
-    }
-
+    val marketEvents = new JSONArray()
     for (event <- events) {
-      marketEventProcessor.process(event, nextBetId, userId)
+      marketEvents.put(new JSONObject(event))
     }
+    val marketEventsData = new JSONObject()
+    marketEventsData.put("userId", userId)
+    marketEventsData.put("marketEvents", marketEvents)
+
+    resource.path("/processBetexEvents").`type`("application/json").post(classOf[String], marketEventsData.toString)
 
   }
 }

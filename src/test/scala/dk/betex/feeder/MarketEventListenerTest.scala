@@ -9,8 +9,7 @@ class MarketEventListenerTest {
 
   val baseUri = "http://localhost:34654/"
   val betexServer = BetexServer(baseUri)
-  val betexAdaptor = BetexAdaptor(baseUri)
-  val marketEventListener = MarketEventListener(betexAdaptor)
+  val marketEventListener = MarketEventListener(baseUri)
 
   val client = Client.create()
   val resource = client.resource(baseUri)

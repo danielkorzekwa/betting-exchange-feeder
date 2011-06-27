@@ -6,5 +6,5 @@
 
 FAQ
 
-2)How to start Betex Feeder from command line?
+1)How to start Betex Feeder from command line?
 betex-feeder bfUser=john bfPassword=green bfProductId=82 collectionInterval=1000 discoveryInterval=60000 startInMinutesFrom=-60 startInMinutesTo=300 betexUrl=http://betex.danmachine.com:80

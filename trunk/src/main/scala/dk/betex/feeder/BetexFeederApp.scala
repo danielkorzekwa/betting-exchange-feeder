@@ -1,8 +1,8 @@
 package dk.betex.feeder
 
-import dk.bettingai.marketcollector.task._
+import dk.betex.eventcollector.task._
 import dk.bot.betfairservice._
-import dk.bettingai.marketcollector.marketservice._
+import dk.betex.eventcollector.marketservice._
 import org.slf4j.LoggerFactory
 
 /**

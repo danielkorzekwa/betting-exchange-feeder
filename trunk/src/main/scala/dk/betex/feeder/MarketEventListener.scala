@@ -1,7 +1,7 @@
 package dk.betex.feeder
 
-import dk.bettingai.marketcollector.task.EventCollectorTask.EventListener
-import dk.bettingai.marketsimulator.marketevent._
+import dk.betex.eventcollector.task.EventCollectorTask.EventListener
+import dk.betex.eventcollector.eventprocessor._
 import dk.betex.api._
 import com.sun.jersey.api.client._
 import org.codehaus.jettison.json._
